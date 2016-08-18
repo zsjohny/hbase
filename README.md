@@ -1,5 +1,7 @@
 # Docker image for standalone HBase
 
+[![](https://images.microbadger.com/badges/image/olegfedoseev/docker-hbase-standalone.svg)](http://microbadger.com/images/olegfedoseev/docker-hbase-standalone "Get your own image badge on microbadger.com")
+
 Small, standalone HBase for development. With REST and Thrift servers.
 
 # Exposed ports
