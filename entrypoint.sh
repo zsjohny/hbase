@@ -1,14 +1,22 @@
 #!/bin/bash
 
-HBASE_PID=/var/run/hbase-master.pid
+ZK_PID=/var/run/hbase-zk.pid
+MASTER_PID=/var/run/hbase-master.pid
+REGION_PID=/var/run/hbase-region.pid
 THRIFT_PID=/var/run/hbase-thrift.pid
 REST_PID=/var/run/hbase-rest.pid
 
 cleanup() {
-  if [ -f ${HBASE_PID} ]; then
+  if [ -f ${MASTER_PID} ]; then
     # If the process is still running time to tear it down.
-    kill -9 `cat ${HBASE_PID}` > /dev/null 2>&1
-    rm -f ${HBASE_PID} > /dev/null 2>&1
+    kill -9 `cat ${MASTER_PID}` > /dev/null 2>&1
+    rm -f ${MASTER_PID} > /dev/null 2>&1
+  fi
+
+  if [ -f ${REGION_PID} ]; then
+    # If the process is still running time to tear it down.
+    kill -9 `cat ${REGION_PID}` > /dev/null 2>&1
+    rm -f ${REGION_PID} > /dev/null 2>&1
   fi
 
   if [ -f ${THRIFT_PID} ]; then
@@ -23,12 +31,28 @@ cleanup() {
     rm -f ${REST_PID} > /dev/null 2>&1
   fi
 
+  if [ -f ${ZK_PID} ]; then
+    # If the process is still running time to tear it down.
+    kill -9 `cat ${ZK_PID}` > /dev/null 2>&1
+    rm -f ${ZK_PID} > /dev/null 2>&1
+  fi
 }
 
 trap cleanup SIGHUP SIGINT SIGTERM EXIT
+
+/usr/local/hbase/bin/hbase zookeeper start 2>&1 &
+zookeeper_pid=$!
+echo $zookeeper_pid ${ZK_PID}
+sleep 1;
+
 /usr/local/hbase/bin/hbase master start 2>&1 &
-hbase_pid=$!
-echo $hbase_pid > ${HBASE_PID}
+master_pid=$!
+echo $master_pid ${MASTER_PID}
+sleep 1;
+
+/usr/local/hbase/bin/hbase regionserver start 2>&1 &
+region_pid=$!
+echo $region_pid > ${REGION_PID}
 
 /usr/local/hbase/bin/hbase thrift2 start 2>&1 &
 thrift_pid=$!
@@ -38,4 +62,4 @@ echo $thrift_pid > ${THRIFT_PID}
 rest_pid=$!
 echo $rest_pid > ${REST_PID}
 
-wait $hbase_pid $thrift_pid $rest_pid
+wait $zk_pid $master_pid $region_pid $thrift_pid $rest_pid

@@ -23,20 +23,26 @@ VOLUME /data
 # REST API
 EXPOSE 8080
 
-# REST Web UI at :8085/rest.jsp
+# REST Web UI
 EXPOSE 8085
 
 # Thrift API
 EXPOSE 9090
 
-# Thrift Web UI at :9095/thrift.jsp
+# Thrift Web UI
 EXPOSE 9095
 
 # HBase Master
 EXPOSE 16000
 
-# HBase Master web UI at :16010/master-status;  ZK at :16010/zk.jsp
+# HBase Master web UI
 EXPOSE 16010
+
+# HBase RegionServer
+EXPOSE 16020
+
+# HBase RegionServer web UI
+EXPOSE 16030
 
 # ZooKeeper
 EXPOSE 2181
