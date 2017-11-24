@@ -1,7 +1,7 @@
 FROM develar/java
-MAINTAINER Oleg Fedoseev <oleg.fedoseev@me.com>
+LABEL MAINTAINER Johny Zheng <shun.johny@gmail.com>
 
-ENV HBASE_VERSION       1.2.2
+ENV HBASE_VERSION       1.3.0
 ENV HBASE_HOME          /usr/local/hbase
 ENV HBASE_CONF_DIR		/usr/local/hbase/conf
 ENV HBASE_LOG_DIR 		/data/logs
